@@ -1,8 +1,9 @@
 {
   "PluginConfiguration": {
-    "DBPath": "SystemAssetBalanceData",
-    "MaxReturnedUnspents": 1000,
-    "TrackUnclaimed": true
+    "DBPath": "Nep5BalanceData",
+    "TrackHistory" : true,
+    "RecordNullAddressHistory": false,
+    "MaxResults" : 1000
   }
 }
 
