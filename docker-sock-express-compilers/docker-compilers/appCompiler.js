@@ -114,12 +114,6 @@ app.post('/compilex', function(req, res) {
     if (req.body.codesend_selected_compiler === "python") { // Python
         code64 = Buffer.from(req.body.codesend_python, 'ascii').toString('base64');
     }
-    if (req.body.codesend_selected_compiler === "golang") { // Golang
-        code64 = Buffer.from(req.body.codesend_golang, 'ascii').toString('base64');
-    } 
-    if (req.body.codesend_selected_compiler === "java") { // Java
-        code64 = Buffer.from(req.body.codesend_java, 'ascii').toString('base64');
-    } 
     if (req.body.codesend_selected_compiler === "csharp") { // C#
         code64 = Buffer.from(req.body.codesend_cs, 'ascii').toString('base64');
     }
