@@ -111,9 +111,6 @@ app.post('/compilex', function(req, res) {
     var imagename = req.body.compilers_versions;
     var code64 = "";
 
-    if (req.body.codesend_selected_compiler === "python") { // Python
-        code64 = Buffer.from(req.body.codesend_python, 'ascii').toString('base64');
-    }
     if (req.body.codesend_selected_compiler === "csharp") { // C#
         code64 = Buffer.from(req.body.codesend_cs, 'ascii').toString('base64');
     }
@@ -139,22 +136,28 @@ app.post('/compilex', function(req, res) {
             var msgret = "{\"output\":\"" + msg64 + "\",\"avm\":\"\",\"abi\":\"\"}";
             res.send(msgret);
         } else {
-            var cmddocker = "docker run -e COMPILECODE=" + code64 + " -e COMPATIBLE=" + compatible + " -t --rm " + imagename;
+            var cmddocker = "docker run -e COMPILECODE=" + code64 + " -t --rm " + imagename;
+	    console.log(cmddocker);
             var start = new Date();
             var child = require('child_process').exec(cmddocker, optionsCompile, (e, stdout, stderr) => {
                 var end = new Date() - start;
                 if (e instanceof Error) {
                     console.error(e);
+                    console.log('stdout ', stdout);
+                    console.log('stderr ', stderr);
+                    console.log('inside error');
                     var message = "Internal Error:\n" + e;
                     if (end > optionsCompile.timeout)
                         message = "Timeout on " + end + "ms (limit: " + optionsCompile.timeout + "ms)\nCan you try again, or switch to an alternative compiling server? Please see the options at 'Configurations' tab.";
                     var msg64 = Buffer.from(message, 'ascii').toString('base64');
                     var msgret = "{\"output\":\"" + msg64 + "\",\"avm\":\"\",\"abi\":\"\"}";
+		    console.log('Finished with error');
                     res.send(msgret);
                     //throw e;
                 } else {
-                    //console.log('stdout ', stdout);
-                    //console.log('stderr ', stderr);
+                    console.log('stdout ', stdout);
+                    console.log('stderr ', stderr);
+		    console.log('Finished compiling');
                     res.send(stdout);
                 }
             }); // child
