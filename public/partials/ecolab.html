@@ -1008,6 +1008,9 @@
 
                                 <h4>ABI:</h4>
                                 <textarea id="codeabi" readonly="readonly" rows="5" cols="100" placeholder="ABI (JSON format)" class="form-control"></textarea>
+
+                                <h4>MANIFEST:</h4>
+                                <textarea id="codemanifest" readonly="readonly" rows="5" cols="100" placeholder="MANIFEST (JSON format)" class="form-control"></textarea>
                             </form> <!-- id="formCompile" -->
                             <!-- end of compilex form -->
                             <!-- /////////////////////////////////////////////////////////////////// -->
@@ -2802,6 +2805,7 @@ setWalletRefreshInterval(1000000000)
         $("#codeavm").val("");
         $("#opcodes").val("");
         $("#codeabi").val("");
+        $("#codemanifest").val("");
         $("#invokehashjs").val("");
         $("#contracthashjs").val("");
         $("#contractparams").val("\"\"");
@@ -2818,6 +2822,7 @@ setWalletRefreshInterval(1000000000)
             indata, // Serializes form data in standard format
             function(data) {
                 console.log("finished compiling");
+                console.log(data);
                 $("#compilebtn")[0].disabled = false;
                 var coderr = atob(data.output);
                 $("#codewarnerr").val(coderr);
@@ -2837,6 +2842,16 @@ setWalletRefreshInterval(1000000000)
     	          var contractScriptHash = getScriptHashFromAVM(hexcodeavm);
                 var avmSize = Math.ceil(hexcodeavm.length/2);
                 updateCompiledOrLoadedContractInfo(contractScriptHash,avmSize);
+
+                // Loading Manifest Info
+                console.log("loading manifest");
+                if(data.manifest != "")
+                {
+                  var textmanifest = atob(data.manifest);
+                  console.log(codemanifest);
+                  $("#codemanifest").val(textmanifest);
+                }
+
                 // Loading all ABI related boxes
                 if(data.abi != "")
                 {
@@ -2844,6 +2859,7 @@ setWalletRefreshInterval(1000000000)
                   console.log(codeabi);
     	            updateAllABIDependencies(JSON.parse(codeabi));
                 }
+
             },
             "json" // The format the response should be in
         ).done(function() { alert('Request done!'); })
